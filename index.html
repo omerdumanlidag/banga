@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Banga Anime</title>
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+        
+        nav {
+            background: #111;
+            padding: 20px;
+            border-bottom: 2px solid #6c5ce7;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #6c5ce7;
+            letter-spacing: 4px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h2 {
+            border-left: 5px solid #6c5ce7;
+            padding-left: 15px;
+            margin: 40px 0 20px 0;
+            text-transform: uppercase;
+        }
+
+        /* Kart Düzeni */
+        .anime-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .anime-card {
+            background: #111;
+            border-radius: 20px;
+            border: 2px solid #222;
+            width: 350px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .anime-card:hover {
+            border-color: #6c5ce7;
+            transform: translateY(-5px);
+        }
+
+        .anime-card img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            display: block;
+            background: #1a1a1a;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .play-btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .episode-list {
+            display: none;
+            margin-top: 15px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .ep-item {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            padding: 12px;
+            border-bottom: 1px solid #333;
+            text-align: left;
+        }
+
+        .ep-item:hover {
+            background: #252525;
+            color: #6c5ce7;
+        }
+
+        /* Kaydırma çubuğu */
+        .episode-list::-webkit-scrollbar { width: 5px; }
+        .episode-list::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<nav>BANGA ANIME</nav>
+
+<div class="container">
+    <h2>POPÜLER ANİMELER</h2>
+
+    <div class="anime-grid">
+        
+        <!-- Dandadan Kartı -->
+        <div class="anime-card">
+            <img src="https://lh3.googleusercontent.com/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx" alt="Dandadan">
+            <div class="card-body">
+                <h3>Dandadan</h3>
+                <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Uzaylılar mı yoksa hayaletler mi?</p>
+                <button class="play-btn" onclick="toggleMenu('ddd-eps')">BÖLÜMLERİ AÇ</button>
+                <div id="ddd-eps" class="episode-list">
+                    <a href="https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/view" target="_blank" class="ep-item">1. Bölüm</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jujutsu Kaisen Kartı -->
+        <div class="anime-card">
+            <img src="https://lh3.googleusercontent.com/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy" alt="Jujutsu Kaisen">
+            <div class="card-body">
+                <h3>Jujutsu Kaisen</h3>
+                <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Lanetlerin dünyası genişliyor.</p>
+                <button class="play-btn" onclick="toggleMenu('jjk-eps')">BÖLÜMLERİ AÇ</button>
+                <div id="jjk-eps" class="episode-list">
+                    <a href="https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/view" target="_blank" class="ep-item">1. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1fZlW1AAdkVDQRHXAvWE0Hn8b5ugtVMg1/view" target="_blank" class="ep-item">2. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1HOofUvLFoZOP4_VfXI3CVpF7GqXZCied/view" target="_blank" class="ep-item">3. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/view" target="_blank" class="ep-item">4. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/view" target="_blank" class="ep-item">5. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/view" target="_blank" class="ep-item">6. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/view" target="_blank" class="ep-item">7. Bölüm</a>
+                    <a href="https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/view" target="_blank" class="ep-item">8. Bölüm</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function toggleMenu(id) {
+        var menu = document.getElementById(id);
+        if (menu.style.display === "block") {
+            menu.style.display = "none";
+        } else {
+            // Diğer açık menüleri kapatmak istersen buraya kod eklenebilir
+            menu.style.display = "block";
+        }
+    }
+</script>
+
+</body>
+</html>
