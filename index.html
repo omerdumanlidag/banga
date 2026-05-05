@@ -3,249 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banga Anime - Şifreli Sistem</title>
+    <title>Banga Anime - CSM Dublaj Güncellendi</title>
     <style>
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; margin: 0; padding-bottom: 50px; }
         .top-bar { background: #1a1a1a; color: #ccc; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; font-size: 0.75rem; }
         .user-status { color: #e91e63; font-weight: bold; cursor: pointer; }
         .header-main { background: white; padding: 20px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
         .logo { color:#e91e63; margin:0; font-style: italic; font-size: 2rem; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .search-container { position: relative; width: 400px; }
-        .search-container input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 3px; background: #f9f9f9; outline: none; }
-        .search-container button { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem; }
-        .nav-menu { background: white; border-bottom: 3px solid #e91e63; padding: 0 5%; display: flex; }
-        .nav-item { padding: 15px 25px; text-decoration: none; color: #444; font-weight: bold; font-size: 0.9rem; border-bottom: 3px solid transparent; }
+        .search-box { padding: 10px; border: 1px solid #ddd; border-radius: 20px; width: 250px; outline: none; }
+        .nav-menu { background: white; border-bottom: 3px solid #e91e63; padding: 0 5%; display: flex; align-items: center; }
+        .nav-item { padding: 15px 20px; text-decoration: none; color: #444; font-weight: bold; font-size: 0.85rem; border-bottom: 3px solid transparent; cursor: pointer; }
         .nav-item:hover, .nav-item.active { color: #e91e63; border-bottom-color: #e91e63; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-content { background: white; width: 320px; margin: 10% auto; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
-        .modal-content h2 { color: #e91e63; margin-top: 0; }
-        .modal-content input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .btn-main { background: #e91e63; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 10px; }
-        .error-msg { color: #d32f2f; font-size: 0.8rem; margin-top: 5px; display: none; }
+        .content-section { display: none; max-width: 1200px; margin: 30px auto; padding: 20px; background: white; border-radius: 8px; border: 1px solid #ddd; }
+        .panel-box { background: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: center; }
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
-        .anime-card { background: white; border-radius: 5px; overflow: hidden; border: 1px solid #ddd; cursor: pointer; transition: 0.3s; }
+        .anime-card { background: white; border-radius: 5px; overflow: hidden; border: 1px solid #ddd; cursor: pointer; }
         .anime-card img { width: 100%; height: 320px; object-fit: cover; }
         #video-page { display: none; max-width: 1200px; margin: 20px auto; padding: 0 20px; grid-template-columns: 1fr 320px; gap: 20px; }
-        .vid-wrapper { background: #000; aspect-ratio: 16/9; }
+        .vid-wrapper { background: #000; aspect-ratio: 16/9; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
-        .sidebar { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 4px; height: fit-content; }
-        .ep-link { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.85rem; color: #555; }
-        .ep-link:hover { color: #e91e63; background: #f9f9f9; }
-        .comment-section { background: white; border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 4px; }
-        .comment-input { width: 100%; padding: 12px; border: 1px solid #ddd; margin-bottom: 10px; box-sizing: border-box; border-radius: 3px; }
-        .comment-list { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
-        .c-item { margin-bottom: 12px; font-size: 0.9rem; padding-bottom: 8px; border-bottom: 1px solid #f9f9f9; }
-        .c-user { color: #e91e63; font-weight: bold; margin-right: 5px; }
-        .back-btn { background: #333; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; margin-bottom: 15px; font-weight: bold; transition: 0.3s; }
-        .back-btn:hover { background: #e91e63; }
+        .sidebar { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 4px; overflow-y: auto; max-height: 500px; }
+        .ep-link { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.9rem; }
+        .comment-section { margin-top: 20px; background: white; padding: 20px; border-radius: 4px; border: 1px solid #ddd; }
+        .comment-box { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .comment-list { margin-top: 15px; }
+        .single-comment { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: white; width: 340px; margin: 10% auto; padding: 30px; border-radius: 8px; text-align: center; }
+        .modal-content input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; box-sizing: border-box;}
+        .btn-main { background: #e91e63; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 5px;}
+        .points-badge { background: #ffd700; color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 5px; }
     </style>
 </head>
 <body>
 
 <div class="top-bar">
-    <div>Banga Subs - Kaliteli Anime İzle</div>
+    <div id="welcome-msg">Banga Subs Hoş Geldiniz</div>
     <div id="auth-zone">
         <span class="user-status" onclick="openModal('login')">Giriş Yap</span> | 
         <span class="user-status" onclick="openModal('register')">Kayıt Ol</span>
     </div>
 </div>
 
-<div id="login-modal" class="modal">
-    <div class="modal-content">
-        <h2>Giriş Yap</h2>
-        <input type="text" id="loginUser" placeholder="Kullanıcı Adı">
-        <input type="password" id="loginPass" placeholder="Şifre">
-        <div id="loginError" class="error-msg">Hatalı kullanıcı adı veya şifre!</div>
-        <button class="btn-main" onclick="handleLogin()">Giriş Yap</button>
-        <p style="font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="closeModals()">Kapat</p>
-    </div>
-</div>
-
-<div id="register-modal" class="modal">
-    <div class="modal-content">
-        <h2>Kayıt Ol</h2>
-        <input type="text" id="regUser" placeholder="Kullanıcı Adı (En az 6 hane)">
-        <input type="password" id="regPass" placeholder="Şifre">
-        <input type="password" id="regPassConfirm" placeholder="Şifre Tekrar">
-        <div id="regError" class="error-msg"></div>
-        <button class="btn-main" onclick="handleRegister()">Kayıt Ol</button>
-        <p style="font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="closeModals()">Kapat</p>
-    </div>
-</div>
-
 <div class="header-main">
-    <a href="#" class="logo" onclick="showHome()">BANGA SUBS</a>
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Anime aramak için yazın..." onkeyup="filterAnimes()">
-        <button>🔍</button>
-    </div>
+    <a href="#" class="logo" onclick="showSection('home-page', document.getElementById('nav-home'))">BANGA SUBS</a>
+    <input type="text" id="searchInput" class="search-box" placeholder="Anime ara..." onkeyup="filterAnime()">
 </div>
 
 <div class="nav-menu">
-    <a href="#" class="nav-item active" onclick="showHome()">ANA SAYFA</a>
-    <a href="https://www.instagram.com/dmnldag_omer/" target="_blank" class="nav-item">İLETİŞİM</a>
+    <div id="nav-home" class="nav-item active" onclick="showSection('home-page', this)">ANA SAYFA</div>
+    <div id="nav-quiz" class="nav-item" onclick="showSection('quiz-page', this)">GÜNLÜK ANKET</div>
+    <div id="nav-vip" class="nav-item" onclick="showSection('vip-page', this)">VIP PANEL</div>
 </div>
 
-<div id="home-page" class="container">
-    <div class="anime-card" onclick="openAnime('jjk')">
-        <img src="https://lh3.googleusercontent.com/u/0/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy" alt="JJK">
-        <div class="anime-info"><h3>Jujutsu Kaisen</h3></div>
+<div id="home-page" class="container" style="display:grid;">
+    <div class="anime-card" onclick="openAnime('jjk')" data-name="Jujutsu Kaisen">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy"><div style="padding:10px;text-align:center;">Jujutsu Kaisen</div>
     </div>
-    <div class="anime-card" onclick="openAnime('dandadan')">
-        <img src="https://lh3.googleusercontent.com/u/0/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx" alt="Dandadan">
-        <div class="anime-info"><h3>Dandadan</h3></div>
+    <div class="anime-card" onclick="openAnime('csm')" data-name="Chainsaw Man">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1y1LzSZ21BxJIY4Qxx7z4Se6Gl48tNQKf"><div style="padding:10px;text-align:center;">Chainsaw Man</div>
+    </div>
+    <div class="anime-card" onclick="openAnime('dandadan')" data-name="Dandadan">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx"><div style="padding:10px;text-align:center;">Dandadan</div>
     </div>
 </div>
 
 <div id="video-page">
     <div class="main-content">
-        <button class="back-btn" onclick="showHome()">← ANA SAYFAYA DÖN</button>
         <div class="vid-wrapper"><iframe id="vidFrame" src="" allowfullscreen></iframe></div>
-        <h2 id="vidTitle" style="margin-top:15px;">Anime Adı</h2>
+        <h2 id="vidTitle">Bölüm Seçin</h2>
         
         <div class="comment-section">
-            <h3 style="margin:0 0 15px 0; font-size:1.1rem;">Bölüm Yorumları</h3>
-            <input type="text" id="commInp" class="comment-input" placeholder="Yorumunuzu yazın...">
-            <button onclick="saveComm()" class="btn-main">YORUMU GÖNDER</button>
-            <div id="commList" class="comment-list">Yorumlar yükleniyor...</div>
+            <h3>Yorumlar</h3>
+            <textarea id="commentInput" class="comment-box" placeholder="Yorumunuzu yazın..."></textarea>
+            <button class="btn-main" onclick="postComment()">Yorum Yap</button>
+            <div id="commentList" class="comment-list"></div>
         </div>
     </div>
-    <div class="sidebar">
-        <h3 id="sideTitle">Bölümler</h3>
-        <div id="epList"></div>
+    <div class="sidebar"><h3>Bölümler</h3><div id="epList"></div></div>
+</div>
+
+<div id="quiz-page" class="content-section">
+    <h2>Günlük 10 Soruluk Anket</h2>
+    <div id="quiz-container" class="panel-box">
+        <div id="quiz-start">
+            <p>Tüm soruları bilene 5 puan! (Günde 1 kez)</p>
+            <button class="btn-main" onclick="startQuiz()">Başla</button>
+        </div>
+        <div id="quiz-questions" style="display:none;">
+            <p id="question-text" style="font-weight:bold;"></p>
+            <div id="options-container"></div>
+        </div>
+        <div id="quiz-limit" style="display:none;"><p>Bugünlük hakkın doldu.</p></div>
     </div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<div id="vip-page" class="content-section">
+    <h2>VIP Yönetim</h2>
+    <div id="vip-locked" class="panel-box">⚠️ 50 Puan Gerekli.</div>
+    <div id="vip-unlocked" class="panel-box" style="display:none;">
+        <h3 style="color:gold">🌟 VIP ALAN AKTİF</h3>
+        <div id="admin-only" style="display:none; border-top: 2px solid red; margin-top:20px; padding-top:20px;">
+            <p style="color:red; font-weight:bold;">YÖNETİCİ PANELİ (SADECE SANA ÖZEL)</p>
+            <button class="btn-main" style="background:black" onclick="localStorage.clear(); location.reload();">TÜM VERİLERİ SİL</button>
+        </div>
+    </div>
+</div>
+
+<div id="login-modal" class="modal"><div class="modal-content">
+    <h2>Giriş</h2>
+    <input type="text" id="lUser" placeholder="Kullanıcı Adı">
+    <input type="password" id="lPass" placeholder="Şifre">
+    <button class="btn-main" onclick="login()">Giriş</button>
+</div></div>
+
+<div id="register-modal" class="modal"><div class="modal-content">
+    <h2>Kayıt</h2>
+    <input type="text" id="rUser" placeholder="Kullanıcı Adı">
+    <input type="password" id="rPass" placeholder="Şifre">
+    <button class="btn-main" onclick="register()">Kayıt Ol</button>
+</div></div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAk1x2v8ji1rlCwsXiRGhTGSL3bBiuakRk",
-        authDomain: "banga-8f48d.firebaseapp.com",
-        projectId: "banga-8f48d",
-        storageBucket: "banga-8f48d.firebasestorage.app",
-        messagingSenderId: "795200261757",
-        appId: "1:795200261757:web:ed820a5eb1a5f84c7f6b14"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
     const animeData = {
-        jjk: { 
-            name: "Jujutsu Kaisen", 
-            eps: [
-                { t: "1. Bölüm", l: "https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview" },
-                { t: "2. Bölüm", l: "https://drive.google.com/file/d/1GRFrUaZG2xk5cdfFvsj_k3lO8JyCv8r9/preview" },
-                { t: "3. Bölüm", l: "https://drive.google.com/file/d/1UmOBU9THCqx6oWHXJb9ePv4aU1d4vsB5/preview" },
-                { t: "4. Bölüm", l: "https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/preview" },
-                { t: "5. Bölüm", l: "https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/preview" },
-                { t: "6. Bölüm", l: "https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/preview" },
-                { t: "7. Bölüm", l: "https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/preview" },
-                { t: "8. Bölüm", l: "https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/preview" }
-            ] 
-        },
-        dandadan: { 
-            name: "Dandadan", 
-            eps: [
-                { t: "1. Bölüm", l: "https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/preview" },
-                { t: "2. Bölüm", l: "https://drive.google.com/file/d/1x5ky5Eumj3-uZ7kNenThrn7EgHhztU0v/preview" },
-                { t: "3. Bölüm", l: "https://drive.google.com/file/d/11VLIHmbEmrx3L3mPokqkpSbN2smXPg9e/preview" }
-            ] 
-        }
+        jjk: { eps: [
+            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview"},
+            {t:"2. Bölüm", l:"https://drive.google.com/file/d/1GRFrUaZG2xk5cdfFvsj_k3lO8JyCv8r9/preview"},
+            {t:"3. Bölüm", l:"https://drive.google.com/file/d/1UmOBU9THCqx6oWHXJb9ePv4aU1d4vsB5/preview"},
+            {t:"4. Bölüm", l:"https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/preview"},
+            {t:"5. Bölüm", l:"https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/preview"},
+            {t:"6. Bölüm", l:"https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/preview"},
+            {t:"7. Bölüm", l:"https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/preview"},
+            {t:"8. Bölüm", l:"https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/preview"}
+        ]},
+        csm: { eps: [{t:"1. Bölüm (Türkçe Dublaj)", l:"https://drive.google.com/file/d/1JYaLxkJaqNsjEbhe4wjw_g7lR9QopXlR/preview"}] },
+        dandadan: { eps: [
+            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx/preview"},
+            {t:"2. Bölüm", l:"https://drive.google.com/file/d/1g8eDSwZgRLaIMTq0jpjxrxZE8V6jo2vo/preview"},
+            {t:"3. Bölüm", l:"https://drive.google.com/file/d/1bxAEUck0sCRQSzIQkQJaSQMiU_w14XrD/preview"},
+            {t:"4. Bölüm", l:"https://drive.google.com/file/d/1DPMwleo2ete-Sl_NwLkFUWzLu34pv1ww/preview"},
+            {t:"5. Bölüm", l:"https://drive.google.com/file/d/1BOH7ZR1g8fmmSR_wDDQ5L3lKsNug7epf/preview"},
+            {t:"6. Bölüm", l:"https://drive.google.com/file/d/1A2Fan-CKUcALy81ueaVZGsJnWovj46XS/preview"},
+            {t:"7. Bölüm", l:"https://drive.google.com/file/d/1Jj_uqpbP-IdWIfDAP1DKYWzrWOZoWn_w/preview"},
+            {t:"8. Bölüm", l:"https://drive.google.com/file/d/1kKogKMxbdOEkqibrfB9aSCRDT6noTO_5/preview"},
+            {t:"9. Bölüm (Sezon Finali)", l:"https://drive.google.com/file/d/1PVqJyvJhOryc0Ze6UN5b2g-LiNDIotez/preview"}
+        ]}
     };
 
-    function openModal(type) { closeModals(); document.getElementById(type + '-modal').style.display = 'block'; }
-    function closeModals() { document.getElementById('login-modal').style.display = 'none'; document.getElementById('register-modal').style.display = 'none'; }
+    const questions = [
+        {q: "Sukuna'nın kaç gözü vardır?", a: ["2", "4", "6"], c: 1},
+        {q: "Pochita neye dönüşür?", a: ["Testere", "Balta", "Kılıç"], c: 0},
+        {q: "Gojo'nun bandajı ne renk?", a: ["Siyah", "Beyaz", "Kırmızı"], c: 0},
+        {q: "Momo'nun gücü?", a: ["Hız", "Telepati", "Uçma"], c: 1},
+        {q: "Aki'nin hayvanı?", a: ["Tilki", "Kurt", "Kedi"], c: 0},
+        {q: "Power ne sever?", a: ["Kan", "Ekmek", "Elma"], c: 0},
+        {q: "Denji'nin kalbi?", a: ["Pochita", "Makima", "Aki"], c: 0},
+        {q: "Itadori'nin arkadaşı?", a: ["Fushiguro", "Todo", "İkisi de"], c: 2},
+        {q: "Okarun neyini kaybetti?", a: ["Cüzdan", "Özel bölge", "Saat"], c: 1},
+        {q: "Banga Subs sahibi?", a: ["Necati Ömer", "Admin", "Bot"], c: 0}
+    ];
 
-    function handleRegister() {
-        const user = document.getElementById('regUser').value;
-        const pass = document.getElementById('regPass').value;
-        const passConf = document.getElementById('regPassConfirm').value;
-        const error = document.getElementById('regError');
-        error.style.display = 'none';
-        if(user.length < 6) { error.innerText = "Kullanıcı adı en az 6 haneli olmalıdır!"; error.style.display = 'block'; return; }
-        if(pass !== passConf) { error.innerText = "Şifreler eşleşmiyor!"; error.style.display = 'block'; return; }
-        localStorage.setItem("banga_db_" + user, pass);
-        alert("Kayıt başarılı! Giriş yapabilirsin.");
-        openModal('login');
-    }
+    let qIdx = 0; let errors = 0;
+    let currentAnimeId = "";
 
-    function handleLogin() {
-        const user = document.getElementById('loginUser').value;
-        const pass = document.getElementById('loginPass').value;
-        const storedPass = localStorage.getItem("banga_db_" + user);
-        if(storedPass && storedPass === pass) {
-            localStorage.setItem("banga_user", user);
-            updateAuthUI();
-            closeModals();
-        } else { document.getElementById('loginError').style.display = 'block'; }
-    }
-
-    function updateAuthUI() {
-        const user = localStorage.getItem("banga_user");
-        if(user) {
-            document.getElementById('auth-zone').innerHTML = `<span>Hoş geldin, ${user}</span> | <span onclick="logout()" style="cursor:pointer">Çıkış</span>`;
+    function updateUI() {
+        const u = localStorage.getItem("banga_user");
+        if(u) {
+            const isAdmin = (u === "banga subs");
+            let p = isAdmin ? "∞" : (localStorage.getItem("pts_" + u) || 0);
+            document.getElementById('auth-zone').innerHTML = `${isAdmin ? '🛡️ ' : ''}<b>${u}</b> <span class="points-badge">${p} PT</span> | <span onclick="logout()" style="cursor:pointer">Çıkış</span>`;
+            if(isAdmin || parseInt(p) >= 50) {
+                document.getElementById('vip-locked').style.display = 'none';
+                document.getElementById('vip-unlocked').style.display = 'block';
+                if(isAdmin) document.getElementById('admin-only').style.display = 'block';
+            }
+            if(localStorage.getItem("q_date_" + u) === new Date().toDateString() && !isAdmin) {
+                document.getElementById('quiz-start').style.display = 'none';
+                document.getElementById('quiz-limit').style.display = 'block';
+            }
         }
     }
-
-    function logout() { localStorage.removeItem("banga_user"); location.reload(); }
 
     function openAnime(id) {
-        const anime = animeData[id];
-        document.getElementById('home-page').style.display = "none";
-        document.getElementById('video-page').style.display = "grid";
-        document.getElementById('sideTitle').innerText = anime.name + " Bölümleri";
-        const list = document.getElementById('epList');
-        list.innerHTML = "";
-        anime.eps.forEach(e => {
-            let d = document.createElement('div');
-            d.className = "ep-link";
-            d.innerText = e.t;
-            d.onclick = () => { 
-                document.getElementById('vidFrame').src = e.l; 
-                document.getElementById('vidTitle').innerText = anime.name + " - " + e.t;
-            };
+        currentAnimeId = id;
+        showSection('video-page', document.getElementById('nav-home'));
+        const list = document.getElementById('epList'); list.innerHTML = "";
+        animeData[id].eps.forEach(e => {
+            let d = document.createElement('div'); d.className="ep-link"; d.innerText=e.t;
+            d.onclick=()=>{ document.getElementById('vidFrame').src=e.l; document.getElementById('vidTitle').innerText=e.t; loadComments(); };
             list.appendChild(d);
         });
-        document.getElementById('vidFrame').src = anime.eps[0].l;
-        document.getElementById('vidTitle').innerText = anime.name + " - " + anime.eps[0].t;
-        getComms();
+        loadComments();
     }
 
-    function showHome() { 
-        document.getElementById('home-page').style.display = "grid"; 
-        document.getElementById('video-page').style.display = "none"; 
-        document.getElementById('vidFrame').src = ""; // Videoyu durdur
+    function postComment() {
+        const u = localStorage.getItem("banga_user");
+        const val = document.getElementById('commentInput').value;
+        if(!u) return alert("Önce giriş yap!");
+        if(!val) return;
+        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
+        cms.push({u: u, t: val, d: new Date().toLocaleString()});
+        localStorage.setItem("comments_" + currentAnimeId, JSON.stringify(cms));
+        document.getElementById('commentInput').value = "";
+        loadComments();
     }
 
-    function filterAnimes() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let cards = document.getElementsByClassName('anime-card');
-        for (let i = 0; i < cards.length; i++) {
-            let name = cards[i].querySelector('h3').innerText.toLowerCase();
-            cards[i].style.display = name.includes(input) ? "block" : "none";
-        }
-    }
-
-    async function saveComm() {
-        let v = document.getElementById("commInp").value;
-        let user = localStorage.getItem("banga_user");
-        if(!user) return alert("Yorum yapmak için giriş yapmalısın!");
-        if(!v.trim()) return;
-        await db.collection("comments").add({ u: user, t: v, d: new Date() });
-        document.getElementById("commInp").value = "";
-    }
-
-    function getComms() {
-        db.collection("comments").orderBy("d", "desc").onSnapshot(s => {
-            let h = "";
-            s.forEach(doc => { h += `<div class="c-item"><span class="c-user">${doc.data().u}:</span> ${doc.data().t}</div>`; });
-            document.getElementById("commList").innerHTML = h || "Henüz yorum yok.";
+    function loadComments() {
+        const list = document.getElementById('commentList'); list.innerHTML = "";
+        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
+        cms.reverse().forEach(c => {
+            list.innerHTML += `<div class="single-comment"><b>${c.u}:</b> ${c.t} <br><small style="color:#999">${c.d}</small></div>`;
         });
     }
 
-    window.onload = updateAuthUI;
+    function startQuiz() {
+        if(!localStorage.getItem("banga_user")) return alert("Giriş Yap!");
+        document.getElementById('quiz-start').style.display = 'none';
+        document.getElementById('quiz-questions').style.display = 'block';
+        showQ();
+    }
+    function showQ() {
+        const q = questions[qIdx]; document.getElementById('question-text').innerText = `${qIdx+1}. ${q.q}`;
+        let h = ""; q.a.forEach((o, i) => h += `<button class="btn-main" onclick="handleA(${i})">${o}</button>`);
+        document.getElementById('options-container').innerHTML = h;
+    }
+    function handleA(i) {
+        if(i !== questions[qIdx].c) errors++;
+        qIdx++; if(qIdx < questions.length) showQ(); else finish();
+    }
+    function finish() {
+        const u = localStorage.getItem("banga_user");
+        localStorage.setItem("q_date_" + u, new Date().toDateString());
+        if(errors === 0 && u !== "banga subs") {
+            let p = parseInt(localStorage.getItem("pts_" + u) || 0);
+            localStorage.setItem("pts_" + u, p + 5); alert("5 Puan kazandın!");
+        } else alert("Bitti!");
+        location.reload();
+    }
+    function login() {
+        const u = document.getElementById('lUser').value;
+        const p = document.getElementById('lPass').value;
+        if(u === "banga subs" && p === "bangasub16") { localStorage.setItem("banga_user", u); location.reload(); }
+        else if(localStorage.getItem("db_" + u) === p) { localStorage.setItem("banga_user", u); location.reload(); }
+        else alert("Hata!");
+    }
+    function register() {
+        const u = document.getElementById('rUser').value; const p = document.getElementById('rPass').value;
+        if(!u || !p || localStorage.getItem("db_" + u)) return alert("Hata!");
+        localStorage.setItem("db_" + u, p); localStorage.setItem("pts_" + u, 0);
+        localStorage.setItem("banga_user", u); location.reload();
+    }
+    function logout() { localStorage.removeItem("banga_user"); location.reload(); }
+    function openModal(id) { document.getElementById(id+'-modal').style.display='block'; }
+    function showSection(id, el) {
+        document.querySelectorAll('.container, .content-section, #video-page').forEach(s=>s.style.display='none');
+        document.getElementById(id).style.display = (id==='home-page'||id==='video-page') ? 'grid' : 'block';
+        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active');
+    }
+    function filterAnime() {
+        let v = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.anime-card').forEach(c => {
+            c.style.display = c.innerText.toLowerCase().includes(v) ? "block" : "none";
+        });
+    }
+    window.onclick = (e) => { if(e.target.className==='modal') document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
+    window.onload = updateUI;
 </script>
 </body>
 </html>
