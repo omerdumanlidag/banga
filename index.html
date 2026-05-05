@@ -2,154 +2,66 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banga Anime</title>
     <style>
-        body {
-            background-color: #000;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            padding-bottom: 50px;
-        }
+        body { background-color: #000; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 50px; }
+        nav { background: #111; padding: 20px; border-bottom: 2px solid #6c5ce7; text-align: center; font-size: 1.8rem; font-weight: bold; color: #6c5ce7; letter-spacing: 4px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         
-        nav {
-            background: #111;
-            padding: 20px;
-            border-bottom: 2px solid #6c5ce7;
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #6c5ce7;
-            letter-spacing: 4px;
-        }
+        #welcome-bar { background: #6c5ce7; color: white; padding: 10px; text-align: center; font-weight: bold; display: none; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h2 {
-            border-left: 5px solid #6c5ce7;
-            padding-left: 15px;
-            margin: 40px 0 20px 0;
-            text-transform: uppercase;
-        }
-
-        /* Kart Düzeni */
-        .anime-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: center;
-        }
-
-        .anime-card {
-            background: #111;
-            border-radius: 20px;
-            border: 2px solid #222;
-            width: 350px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .anime-card:hover {
-            border-color: #6c5ce7;
-            transform: translateY(-5px);
-        }
-
-        .anime-card img {
-            width: 100%;
-            height: 450px;
-            object-fit: cover;
-            display: block;
-            background: #1a1a1a;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .play-btn {
-            background: #6c5ce7;
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .episode-list {
-            display: none;
-            margin-top: 15px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            padding: 10px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .ep-item {
-            display: block;
-            color: #ddd;
-            text-decoration: none;
-            padding: 12px;
-            border-bottom: 1px solid #333;
-            text-align: left;
-        }
-
-        .ep-item:hover {
-            background: #252525;
-            color: #6c5ce7;
-        }
-
-        /* Kaydırma çubuğu */
-        .episode-list::-webkit-scrollbar { width: 5px; }
-        .episode-list::-webkit-scrollbar-thumb { background: #6c5ce7; border-radius: 10px; }
+        .anime-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+        .anime-card { background: #111; border-radius: 20px; border: 2px solid #222; width: 380px; overflow: hidden; transition: 0.3s; margin-bottom: 20px; }
+        .anime-card img { width: 100%; height: 450px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        
+        .play-btn { background: #6c5ce7; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
+        .play-btn:hover { background: #a29bfe; }
+        
+        /* Yorum Alanı Tasarımı */
+        .comment-box { background: #1a1a1a; border-radius: 10px; padding: 15px; margin-top: 20px; border: 1px solid #333; }
+        .comment-input { width: 100%; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; margin-bottom: 10px; box-sizing: border-box; }
+        .send-btn { background: #6c5ce7; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .comment-display { max-height: 200px; overflow-y: auto; font-size: 0.9rem; margin-top: 15px; border-top: 1px solid #333; padding-top: 10px; }
+        .single-comment { background: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #6c5ce7; }
+        .comment-user { color: #a29bfe; font-weight: bold; font-size: 0.85rem; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
+<div id="welcome-bar"></div>
 <nav>BANGA ANIME</nav>
 
 <div class="container">
-    <h2>POPÜLER ANİMELER</h2>
-
     <div class="anime-grid">
         
-        <!-- Dandadan Kartı -->
+        <!-- Dandadan -->
         <div class="anime-card">
             <img src="https://lh3.googleusercontent.com/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx" alt="Dandadan">
             <div class="card-body">
                 <h3>Dandadan</h3>
-                <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Uzaylılar mı yoksa hayaletler mi?</p>
-                <button class="play-btn" onclick="toggleMenu('ddd-eps')">BÖLÜMLERİ AÇ</button>
-                <div id="ddd-eps" class="episode-list">
-                    <a href="https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/view" target="_blank" class="ep-item">1. Bölüm</a>
+                <a href="https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/view" target="_blank" style="text-decoration:none;"><button class="play-btn">1. BÖLÜMÜ İZLE</button></a>
+                
+                <div class="comment-box">
+                    <input type="text" id="input-dandadan" class="comment-input" placeholder="Yorumunu yaz...">
+                    <button onclick="addComment('dandadan')" class="send-btn">Gönder</button>
+                    <div id="comments-dandadan" class="comment-display">Yorumlar yükleniyor...</div>
                 </div>
             </div>
         </div>
 
-        <!-- Jujutsu Kaisen Kartı -->
+        <!-- Jujutsu Kaisen -->
         <div class="anime-card">
-            <img src="https://lh3.googleusercontent.com/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy" alt="Jujutsu Kaisen">
+            <img src="https://lh3.googleusercontent.com/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy" alt="JJK">
             <div class="card-body">
                 <h3>Jujutsu Kaisen</h3>
-                <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">Lanetlerin dünyası genişliyor.</p>
-                <button class="play-btn" onclick="toggleMenu('jjk-eps')">BÖLÜMLERİ AÇ</button>
-                <div id="jjk-eps" class="episode-list">
-                    <a href="https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/view" target="_blank" class="ep-item">1. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1fZlW1AAdkVDQRHXAvWE0Hn8b5ugtVMg1/view" target="_blank" class="ep-item">2. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1HOofUvLFoZOP4_VfXI3CVpF7GqXZCied/view" target="_blank" class="ep-item">3. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/view" target="_blank" class="ep-item">4. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/view" target="_blank" class="ep-item">5. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/view" target="_blank" class="ep-item">6. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/view" target="_blank" class="ep-item">7. Bölüm</a>
-                    <a href="https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/view" target="_blank" class="ep-item">8. Bölüm</a>
+                <a href="https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/view" target="_blank" style="text-decoration:none;"><button class="play-btn">BÖLÜMLERE GİT</button></a>
+                
+                <div class="comment-box">
+                    <input type="text" id="input-jjk" class="comment-input" placeholder="Yorumunu yaz...">
+                    <button onclick="addComment('jjk')" class="send-btn">Gönder</button>
+                    <div id="comments-jjk" class="comment-display">Yorumlar yükleniyor...</div>
                 </div>
             </div>
         </div>
@@ -157,17 +69,95 @@
     </div>
 </div>
 
+<!-- Firebase SDK'ları -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script>
-    function toggleMenu(id) {
-        var menu = document.getElementById(id);
-        if (menu.style.display === "block") {
-            menu.style.display = "none";
-        } else {
-            // Diğer açık menüleri kapatmak istersen buraya kod eklenebilir
-            menu.style.display = "block";
-        }
-    }
+  // Senin Firebase Bilgilerin
+  const firebaseConfig = {
+    apiKey: "AIzaSyAk1x2v8ji1rlCwsXiRGhTGSL3bBiuakRk",
+    authDomain: "banga-8f48d.firebaseapp.com",
+    projectId: "banga-8f48d",
+    storageBucket: "banga-8f48d.firebasestorage.app",
+    messagingSenderId: "795200261757",
+    appId: "1:795200261757:web:ed820a5eb1a5f84c7f6b14",
+    measurementId: "G-P66HX19BRB"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // 1. İSİM SORMA SİSTEMİ
+  window.onload = function() {
+      let user = localStorage.getItem("banga_user");
+      if (!user) {
+          user = prompt("Banga Anime'ye hoş geldin! İsmin nedir?");
+          if (user) {
+              localStorage.setItem("banga_user", user);
+          } else {
+              user = "Anonim";
+          }
+      }
+      
+      if (user !== "Anonim") {
+          let bar = document.getElementById("welcome-bar");
+          bar.innerText = "Hoş geldin, " + user + "!";
+          bar.style.display = "block";
+      }
+
+      // Yorumları canlı dinlemeye başla
+      loadLiveComments('dandadan');
+      loadLiveComments('jjk');
+  }
+
+  // 2. YORUM EKLEME (Firestore'a Kaydetme)
+  async function addComment(animeId) {
+      let user = localStorage.getItem("banga_user") || "Anonim";
+      let input = document.getElementById("input-" + animeId);
+      let text = input.value;
+
+      if (text.trim() !== "") {
+          try {
+              await db.collection("comments").add({
+                  animeId: animeId,
+                  user: user,
+                  text: text,
+                  date: new Date()
+              });
+              input.value = "";
+          } catch (error) {
+              console.error("Hata oluştu: ", error);
+              alert("Yorum gönderilemedi. Firestore 'Test Modu' ayarını kontrol et!");
+          }
+      }
+  }
+
+  // 3. YORUMLARI CANLI GÖSTERME
+  function loadLiveComments(animeId) {
+      db.collection("comments")
+          .where("animeId", "==", animeId)
+          .orderBy("date", "desc")
+          .onSnapshot((snapshot) => {
+              let container = document.getElementById("comments-" + animeId);
+              let html = "";
+              if (snapshot.empty) {
+                  html = "<div style='color:#666; font-size:0.8rem;'>Henüz yorum yok. İlk yorumu sen yaz!</div>";
+              } else {
+                  snapshot.forEach((doc) => {
+                      let c = doc.data();
+                      html += `
+                          <div class="single-comment">
+                              <div class="comment-user">${c.user}</div>
+                              <div>${c.text}</div>
+                          </div>`;
+                  });
+              }
+              container.innerHTML = html;
+          });
+  }
 </script>
 
 </body>
+</html>
 </html>
