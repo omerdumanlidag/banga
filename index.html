@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banga Anime - CSM Dublaj Güncellendi</title>
+    <title>Banga Anime - Kesin Günlük Anket Fix</title>
     <style>
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; margin: 0; padding-bottom: 50px; }
         .top-bar { background: #1a1a1a; color: #ccc; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; font-size: 0.75rem; }
@@ -72,7 +72,6 @@
     <div class="main-content">
         <div class="vid-wrapper"><iframe id="vidFrame" src="" allowfullscreen></iframe></div>
         <h2 id="vidTitle">Bölüm Seçin</h2>
-        
         <div class="comment-section">
             <h3>Yorumlar</h3>
             <textarea id="commentInput" class="comment-box" placeholder="Yorumunuzu yazın..."></textarea>
@@ -87,14 +86,14 @@
     <h2>Günlük 10 Soruluk Anket</h2>
     <div id="quiz-container" class="panel-box">
         <div id="quiz-start">
-            <p>Tüm soruları bilene 5 puan! (Günde 1 kez)</p>
+            <p>10 soruyu doğru bil, 5 puan kazan! (Günde sadece 1 kez)</p>
             <button class="btn-main" onclick="startQuiz()">Başla</button>
         </div>
         <div id="quiz-questions" style="display:none;">
             <p id="question-text" style="font-weight:bold;"></p>
             <div id="options-container"></div>
         </div>
-        <div id="quiz-limit" style="display:none;"><p>Bugünlük hakkın doldu.</p></div>
+        <div id="quiz-limit" style="display:none;"><p style="color:red; font-weight:bold; font-size:1.2rem;">⚠️ Bugünlük hakkın doldu. Yarın tekrar gel!</p></div>
     </div>
 </div>
 
@@ -104,7 +103,7 @@
     <div id="vip-unlocked" class="panel-box" style="display:none;">
         <h3 style="color:gold">🌟 VIP ALAN AKTİF</h3>
         <div id="admin-only" style="display:none; border-top: 2px solid red; margin-top:20px; padding-top:20px;">
-            <p style="color:red; font-weight:bold;">YÖNETİCİ PANELİ (SADECE SANA ÖZEL)</p>
+            <p style="color:red; font-weight:bold;">YÖNETİCİ PANELİ</p>
             <button class="btn-main" style="background:black" onclick="localStorage.clear(); location.reload();">TÜM VERİLERİ SİL</button>
         </div>
     </div>
@@ -138,7 +137,7 @@
         ]},
         csm: { eps: [{t:"1. Bölüm (Türkçe Dublaj)", l:"https://drive.google.com/file/d/1JYaLxkJaqNsjEbhe4wjw_g7lR9QopXlR/preview"}] },
         dandadan: { eps: [
-            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx/preview"},
+            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1Sb5XIDjMgAef1ABBKg4zK5-lfHM8Qqrx/preview"},
             {t:"2. Bölüm", l:"https://drive.google.com/file/d/1g8eDSwZgRLaIMTq0jpjxrxZE8V6jo2vo/preview"},
             {t:"3. Bölüm", l:"https://drive.google.com/file/d/1bxAEUck0sCRQSzIQkQJaSQMiU_w14XrD/preview"},
             {t:"4. Bölüm", l:"https://drive.google.com/file/d/1DPMwleo2ete-Sl_NwLkFUWzLu34pv1ww/preview"},
@@ -160,11 +159,10 @@
         {q: "Denji'nin kalbi?", a: ["Pochita", "Makima", "Aki"], c: 0},
         {q: "Itadori'nin arkadaşı?", a: ["Fushiguro", "Todo", "İkisi de"], c: 2},
         {q: "Okarun neyini kaybetti?", a: ["Cüzdan", "Özel bölge", "Saat"], c: 1},
-        {q: "Banga Subs sahibi?", a: ["Necati Ömer", "Admin", "Bot"], c: 0}
+        {q: "Banga Subs sahibi kim?", a: ["Necati Ömer", "Admin", "Bot"], c: 0}
     ];
 
-    let qIdx = 0; let errors = 0;
-    let currentAnimeId = "";
+    let qIdx = 0; let errors = 0; let currentAnimeId = "";
 
     function updateUI() {
         const u = localStorage.getItem("banga_user");
@@ -177,11 +175,32 @@
                 document.getElementById('vip-unlocked').style.display = 'block';
                 if(isAdmin) document.getElementById('admin-only').style.display = 'block';
             }
-            if(localStorage.getItem("q_date_" + u) === new Date().toDateString() && !isAdmin) {
-                document.getElementById('quiz-start').style.display = 'none';
-                document.getElementById('quiz-limit').style.display = 'block';
-            }
         }
+    }
+
+    function checkQuizLimit() {
+        const u = localStorage.getItem("banga_user");
+        if(!u) return;
+        if(u === "banga subs") return; // Admin için sınır yok
+
+        const today = new Date().toDateString();
+        const lastDate = localStorage.getItem("q_date_" + u);
+
+        if(lastDate === today) {
+            document.getElementById('quiz-start').style.display = 'none';
+            document.getElementById('quiz-limit').style.display = 'block';
+            document.getElementById('quiz-questions').style.display = 'none';
+        } else {
+            document.getElementById('quiz-start').style.display = 'block';
+            document.getElementById('quiz-limit').style.display = 'none';
+        }
+    }
+
+    function showSection(id, el) {
+        document.querySelectorAll('.container, .content-section, #video-page').forEach(s=>s.style.display='none');
+        document.getElementById(id).style.display = (id==='home-page'||id==='video-page') ? 'grid' : 'block';
+        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active');
+        if(id === 'quiz-page') checkQuizLimit();
     }
 
     function openAnime(id) {
@@ -196,28 +215,9 @@
         loadComments();
     }
 
-    function postComment() {
-        const u = localStorage.getItem("banga_user");
-        const val = document.getElementById('commentInput').value;
-        if(!u) return alert("Önce giriş yap!");
-        if(!val) return;
-        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
-        cms.push({u: u, t: val, d: new Date().toLocaleString()});
-        localStorage.setItem("comments_" + currentAnimeId, JSON.stringify(cms));
-        document.getElementById('commentInput').value = "";
-        loadComments();
-    }
-
-    function loadComments() {
-        const list = document.getElementById('commentList'); list.innerHTML = "";
-        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
-        cms.reverse().forEach(c => {
-            list.innerHTML += `<div class="single-comment"><b>${c.u}:</b> ${c.t} <br><small style="color:#999">${c.d}</small></div>`;
-        });
-    }
-
     function startQuiz() {
         if(!localStorage.getItem("banga_user")) return alert("Giriş Yap!");
+        qIdx = 0; errors = 0;
         document.getElementById('quiz-start').style.display = 'none';
         document.getElementById('quiz-questions').style.display = 'block';
         showQ();
@@ -236,29 +236,41 @@
         localStorage.setItem("q_date_" + u, new Date().toDateString());
         if(errors === 0 && u !== "banga subs") {
             let p = parseInt(localStorage.getItem("pts_" + u) || 0);
-            localStorage.setItem("pts_" + u, p + 5); alert("5 Puan kazandın!");
-        } else alert("Bitti!");
-        location.reload();
+            localStorage.setItem("pts_" + u, p + 5); alert("Tebrikler! Hatasız bitirdin, 5 Puan eklendi.");
+        } else {
+            alert("Anket bitti! Hataların olduğu için puan alamadın. Yarın tekrar dene!");
+        }
+        checkQuizLimit();
     }
+
     function login() {
-        const u = document.getElementById('lUser').value;
-        const p = document.getElementById('lPass').value;
+        const u = document.getElementById('lUser').value; const p = document.getElementById('lPass').value;
         if(u === "banga subs" && p === "bangasub16") { localStorage.setItem("banga_user", u); location.reload(); }
         else if(localStorage.getItem("db_" + u) === p) { localStorage.setItem("banga_user", u); location.reload(); }
-        else alert("Hata!");
+        else alert("Bilgiler hatalı!");
     }
     function register() {
         const u = document.getElementById('rUser').value; const p = document.getElementById('rPass').value;
-        if(!u || !p || localStorage.getItem("db_" + u)) return alert("Hata!");
+        if(!u || !p || localStorage.getItem("db_" + u)) return alert("Geçersiz kullanıcı adı!");
         localStorage.setItem("db_" + u, p); localStorage.setItem("pts_" + u, 0);
         localStorage.setItem("banga_user", u); location.reload();
     }
     function logout() { localStorage.removeItem("banga_user"); location.reload(); }
     function openModal(id) { document.getElementById(id+'-modal').style.display='block'; }
-    function showSection(id, el) {
-        document.querySelectorAll('.container, .content-section, #video-page').forEach(s=>s.style.display='none');
-        document.getElementById(id).style.display = (id==='home-page'||id==='video-page') ? 'grid' : 'block';
-        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active');
+    function loadComments() {
+        const list = document.getElementById('commentList'); list.innerHTML = "";
+        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
+        cms.reverse().forEach(c => {
+            list.innerHTML += `<div class="single-comment"><b>${c.u}:</b> ${c.t} <br><small style="color:#999">${c.d}</small></div>`;
+        });
+    }
+    function postComment() {
+        const u = localStorage.getItem("banga_user"); const val = document.getElementById('commentInput').value;
+        if(!u) return alert("Önce giriş yap!"); if(!val) return;
+        let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
+        cms.push({u: u, t: val, d: new Date().toLocaleString()});
+        localStorage.setItem("comments_" + currentAnimeId, JSON.stringify(cms));
+        document.getElementById('commentInput').value = ""; loadComments();
     }
     function filterAnime() {
         let v = document.getElementById('searchInput').value.toLowerCase();
