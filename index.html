@@ -3,200 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banga Anime - Banga Subs</title>
+    <title>Banga Anime - Şifreli Sistem</title>
     <style>
-        /* GENEL TASARIM */
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; margin: 0; padding-bottom: 50px; }
-        
-        /* ÜST SİYAH BAR */
-        .top-black-bar { background: #1a1a1a; color: #ccc; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; font-size: 0.75rem; }
-        .social-icons span { margin-right: 10px; cursor: pointer; }
-
-        /* LOGO VE ARAMA ALANI */
+        .top-bar { background: #1a1a1a; color: #ccc; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; font-size: 0.75rem; }
+        .user-status { color: #e91e63; font-weight: bold; cursor: pointer; }
         .header-main { background: white; padding: 20px 5%; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #ddd; }
-        .logo-area h1 { color:#e91e63; margin:0; font-style: italic; cursor: pointer; }
-        .search-box { position: relative; width: 300px; }
-        .search-box input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 3px; background: #f9f9f9; outline: none; }
-        .search-box button { position: absolute; right: 5px; top: 5px; background: none; border: none; cursor: pointer; color: #888; }
-
-        /* PEMBE NAVİGASYON MENÜSÜ */
-        .nav-menu { background: white; border-bottom: 3px solid #e91e63; padding: 0 5%; display: flex; gap: 5px; }
-        .nav-item { padding: 15px 20px; text-decoration: none; color: #444; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; border-bottom: 3px solid transparent; transition: 0.2s; }
+        .logo { color:#e91e63; margin:0; font-style: italic; font-size: 2rem; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .search-container { position: relative; width: 400px; }
+        .search-container input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 3px; background: #f9f9f9; outline: none; }
+        .search-container button { position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+        .nav-menu { background: white; border-bottom: 3px solid #e91e63; padding: 0 5%; display: flex; }
+        .nav-item { padding: 15px 25px; text-decoration: none; color: #444; font-weight: bold; font-size: 0.9rem; border-bottom: 3px solid transparent; }
         .nav-item:hover, .nav-item.active { color: #e91e63; border-bottom-color: #e91e63; }
-
-        /* ALFABETİK SIRALAMA */
-        .alphabet-bar { background: #333; padding: 10px 5%; display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
-        .alpha-btn { background: #444; color: white; border: none; padding: 5px 8px; font-size: 0.7rem; cursor: pointer; border-radius: 2px; }
-        .alpha-btn:hover { background: #e91e63; }
-
-        /* İÇERİK ALANI */
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
-
-        .video-wrapper { background: #000; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        iframe { width: 100%; aspect-ratio: 16 / 9; border: none; }
-
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: white; width: 320px; margin: 10% auto; padding: 30px; border-radius: 8px; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.2); }
+        .modal-content h2 { color: #e91e63; margin-top: 0; }
+        .modal-content input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .btn-main { background: #e91e63; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 10px; }
+        .error-msg { color: #d32f2f; font-size: 0.8rem; margin-top: 5px; display: none; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
+        .anime-card { background: white; border-radius: 5px; overflow: hidden; border: 1px solid #ddd; cursor: pointer; transition: 0.3s; }
+        .anime-card img { width: 100%; height: 320px; object-fit: cover; }
+        #video-page { display: none; max-width: 1200px; margin: 20px auto; padding: 0 20px; grid-template-columns: 1fr 320px; gap: 20px; }
+        .vid-wrapper { background: #000; aspect-ratio: 16/9; }
+        iframe { width: 100%; height: 100%; border: none; }
         .sidebar { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 4px; height: fit-content; }
-        .sidebar h3 { font-size: 0.9rem; color: #e91e63; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; }
-        .ep-link { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; display: block; text-decoration: none; color: #555; font-size: 0.85rem; transition: 0.2s; }
-        .ep-link:hover { color: #e91e63; background: #f9f9f9; padding-left: 15px; }
-
-        /* YORUM KUTUSU */
+        .ep-link { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.85rem; color: #555; }
+        .ep-link:hover { color: #e91e63; background: #f9f9f9; }
         .comment-section { background: white; border: 1px solid #ddd; padding: 20px; margin-top: 20px; border-radius: 4px; }
-        .comment-input { width: 100%; padding: 10px; border: 1px solid #ddd; margin-bottom: 10px; box-sizing: border-box; border-radius: 3px; }
-        .btn-post { background: #e91e63; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 3px; }
-
-        .comment-list { margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
-        .c-item { margin-bottom: 15px; font-size: 0.9rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
-        .c-user { color: #e91e63; font-weight: bold; }
-
-        .footer { text-align: center; margin-top: 50px; color: #999; font-size: 0.75rem; }
+        .comment-input { width: 100%; padding: 12px; border: 1px solid #ddd; margin-bottom: 10px; box-sizing: border-box; border-radius: 3px; }
+        .comment-list { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+        .c-item { margin-bottom: 12px; font-size: 0.9rem; padding-bottom: 8px; border-bottom: 1px solid #f9f9f9; }
+        .c-user { color: #e91e63; font-weight: bold; margin-right: 5px; }
+        .back-btn { background: #333; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; margin-bottom: 15px; font-weight: bold; transition: 0.3s; }
+        .back-btn:hover { background: #e91e63; }
     </style>
 </head>
 <body>
 
-<div class="top-black-bar">
-    <div class="social-icons">
-        <span>f</span> <span>t</span> <span>g+</span> <span>i</span> <span>w</span>
+<div class="top-bar">
+    <div>Banga Subs - Kaliteli Anime İzle</div>
+    <div id="auth-zone">
+        <span class="user-status" onclick="openModal('login')">Giriş Yap</span> | 
+        <span class="user-status" onclick="openModal('register')">Kayıt Ol</span>
     </div>
-    <div>Anime İzle</div>
-    <div>Giriş yap ya da Kayıt ol</div>
+</div>
+
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <h2>Giriş Yap</h2>
+        <input type="text" id="loginUser" placeholder="Kullanıcı Adı">
+        <input type="password" id="loginPass" placeholder="Şifre">
+        <div id="loginError" class="error-msg">Hatalı kullanıcı adı veya şifre!</div>
+        <button class="btn-main" onclick="handleLogin()">Giriş Yap</button>
+        <p style="font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="closeModals()">Kapat</p>
+    </div>
+</div>
+
+<div id="register-modal" class="modal">
+    <div class="modal-content">
+        <h2>Kayıt Ol</h2>
+        <input type="text" id="regUser" placeholder="Kullanıcı Adı (En az 6 hane)">
+        <input type="password" id="regPass" placeholder="Şifre">
+        <input type="password" id="regPassConfirm" placeholder="Şifre Tekrar">
+        <div id="regError" class="error-msg"></div>
+        <button class="btn-main" onclick="handleRegister()">Kayıt Ol</button>
+        <p style="font-size:0.8rem; margin-top:15px; cursor:pointer;" onclick="closeModals()">Kapat</p>
+    </div>
 </div>
 
 <div class="header-main">
-    <div class="logo-area">
-        <h1 onclick="location.reload()">BANGA SUBS</h1>
-    </div>
-    <div class="search-box">
-        <input type="text" id="animeSearch" placeholder="Anime aramak için yazın..." onkeyup="searchAnime()">
+    <a href="#" class="logo" onclick="showHome()">BANGA SUBS</a>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Anime aramak için yazın..." onkeyup="filterAnimes()">
         <button>🔍</button>
     </div>
 </div>
 
 <div class="nav-menu">
-    <a href="#" class="nav-item active" onclick="location.reload()">ANA SAYFA</a>
-    <a href="#" class="nav-item">HABERLER</a>
-    <a href="#" class="nav-item">EKİP ÜYESİ ALIMLARI <span style="background:#e91e63; color:white; font-size:0.6rem; padding:2px 4px; border-radius:2px;">YENİ</span></a>
-    <!-- INSTAGRAM LİNKİ BURAYA EKLENDİ -->
+    <a href="#" class="nav-item active" onclick="showHome()">ANA SAYFA</a>
     <a href="https://www.instagram.com/dmnldag_omer/" target="_blank" class="nav-item">İLETİŞİM</a>
 </div>
 
-<div class="alphabet-bar">
-    <button class="alpha-btn">#</button>
-    <script>
-        "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ".split("").forEach(l => {
-            document.write(`<button class="alpha-btn">${l}</button>`);
-        });
-    </script>
+<div id="home-page" class="container">
+    <div class="anime-card" onclick="openAnime('jjk')">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1MPh4uOB8tBGo3225v1C1Wz8Uuju-4WMy" alt="JJK">
+        <div class="anime-info"><h3>Jujutsu Kaisen</h3></div>
+    </div>
+    <div class="anime-card" onclick="openAnime('dandadan')">
+        <img src="https://lh3.googleusercontent.com/u/0/d/1l34lEXnJn39rdByCohMHGeHYsF2BmUVx" alt="Dandadan">
+        <div class="anime-info"><h3>Dandadan</h3></div>
+    </div>
 </div>
 
-<div class="container">
+<div id="video-page">
     <div class="main-content">
-        <div class="video-wrapper">
-            <iframe id="vidFrame" src="" allowfullscreen></iframe>
-        </div>
-        <h2 id="vidTitle" style="margin:15px 0 5px 0; font-size: 1.2rem;">Yükleniyor...</h2>
-        <p style="color:#888; font-size:0.8rem; margin-bottom:20px;">Çeviri & Edit: <b>Banga Subs</b></p>
-
+        <button class="back-btn" onclick="showHome()">← ANA SAYFAYA DÖN</button>
+        <div class="vid-wrapper"><iframe id="vidFrame" src="" allowfullscreen></iframe></div>
+        <h2 id="vidTitle" style="margin-top:15px;">Anime Adı</h2>
+        
         <div class="comment-section">
-            <h3 style="margin:0 0 15px 0; font-size: 1rem;">Bölüm Yorumları</h3>
+            <h3 style="margin:0 0 15px 0; font-size:1.1rem;">Bölüm Yorumları</h3>
             <input type="text" id="commInp" class="comment-input" placeholder="Yorumunuzu yazın...">
-            <button onclick="saveComm()" class="btn-post">GÖNDER</button>
+            <button onclick="saveComm()" class="btn-main">YORUMU GÖNDER</button>
             <div id="commList" class="comment-list">Yorumlar yükleniyor...</div>
         </div>
     </div>
-
     <div class="sidebar">
         <h3 id="sideTitle">Bölümler</h3>
         <div id="epList"></div>
     </div>
 </div>
 
-<div class="footer">
-    Banga Subs © 2026 | Geliştirici: Necati Ömer
-</div>
-
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAk1x2v8ji1rlCwsXiRGhTGSL3bBiuakRk",
-    authDomain: "banga-8f48d.firebaseapp.com",
-    projectId: "banga-8f48d",
-    storageBucket: "banga-8f48d.firebasestorage.app",
-    messagingSenderId: "795200261757",
-    appId: "1:795200261757:web:ed820a5eb1a5f84c7f6b14"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyAk1x2v8ji1rlCwsXiRGhTGSL3bBiuakRk",
+        authDomain: "banga-8f48d.firebaseapp.com",
+        projectId: "banga-8f48d",
+        storageBucket: "banga-8f48d.firebasestorage.app",
+        messagingSenderId: "795200261757",
+        appId: "1:795200261757:web:ed820a5eb1a5f84c7f6b14"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+    const animeData = {
+        jjk: { 
+            name: "Jujutsu Kaisen", 
+            eps: [
+                { t: "1. Bölüm", l: "https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview" },
+                { t: "2. Bölüm", l: "https://drive.google.com/file/d/1GRFrUaZG2xk5cdfFvsj_k3lO8JyCv8r9/preview" },
+                { t: "3. Bölüm", l: "https://drive.google.com/file/d/1UmOBU9THCqx6oWHXJb9ePv4aU1d4vsB5/preview" },
+                { t: "4. Bölüm", l: "https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/preview" },
+                { t: "5. Bölüm", l: "https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/preview" },
+                { t: "6. Bölüm", l: "https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/preview" },
+                { t: "7. Bölüm", l: "https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/preview" },
+                { t: "8. Bölüm", l: "https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/preview" }
+            ] 
+        },
+        dandadan: { 
+            name: "Dandadan", 
+            eps: [
+                { t: "1. Bölüm", l: "https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/preview" },
+                { t: "2. Bölüm", l: "https://drive.google.com/file/d/1x5ky5Eumj3-uZ7kNenThrn7EgHhztU0v/preview" },
+                { t: "3. Bölüm", l: "https://drive.google.com/file/d/11VLIHmbEmrx3L3mPokqkpSbN2smXPg9e/preview" }
+            ] 
+        }
+    };
 
-  const animes = {
-    dandadan: {
-      name: "Dandadan",
-      eps: [
-        { t: "1. Bölüm", l: "https://drive.google.com/file/d/1r1R6vWimlZVcIqQNppzL1T3g-V6rVV7Z/preview" },
-        { t: "2. Bölüm", l: "https://drive.google.com/file/d/1x5ky5Eumj3-uZ7kNenThrn7EgHhztU0v/preview" },
-        { t: "3. Bölüm", l: "https://drive.google.com/file/d/11VLIHmbEmrx3L3mPokqkpSbN2smXPg9e/preview" }
-      ]
-    },
-    jjk: {
-      name: "Jujutsu Kaisen",
-      eps: [
-        { t: "1. Sezon Tüm Bölümler", l: "https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview" }
-      ]
+    function openModal(type) { closeModals(); document.getElementById(type + '-modal').style.display = 'block'; }
+    function closeModals() { document.getElementById('login-modal').style.display = 'none'; document.getElementById('register-modal').style.display = 'none'; }
+
+    function handleRegister() {
+        const user = document.getElementById('regUser').value;
+        const pass = document.getElementById('regPass').value;
+        const passConf = document.getElementById('regPassConfirm').value;
+        const error = document.getElementById('regError');
+        error.style.display = 'none';
+        if(user.length < 6) { error.innerText = "Kullanıcı adı en az 6 haneli olmalıdır!"; error.style.display = 'block'; return; }
+        if(pass !== passConf) { error.innerText = "Şifreler eşleşmiyor!"; error.style.display = 'block'; return; }
+        localStorage.setItem("banga_db_" + user, pass);
+        alert("Kayıt başarılı! Giriş yapabilirsin.");
+        openModal('login');
     }
-  };
 
-  function searchAnime() {
-    let input = document.getElementById('animeSearch').value.toLowerCase();
-    if(input.includes("jjk") || input.includes("jujutsu")) loadAnime('jjk');
-    if(input.includes("dandadan")) loadAnime('dandadan');
-  }
-
-  function loadAnime(key) {
-    const a = animes[key];
-    document.getElementById('sideTitle').innerText = a.name + " Bölümleri";
-    const list = document.getElementById('epList');
-    list.innerHTML = "";
-    a.eps.forEach(e => {
-        let d = document.createElement('div');
-        d.className = "ep-link";
-        d.innerText = e.t;
-        d.onclick = () => {
-            document.getElementById('vidFrame').src = e.l;
-            document.getElementById('vidTitle').innerText = a.name + " - " + e.t;
-        };
-        list.appendChild(d);
-    });
-    document.getElementById('vidFrame').src = a.eps[0].l;
-    document.getElementById('vidTitle').innerText = a.name + " - " + a.eps[0].t;
-  }
-
-  window.onload = () => {
-    if(!localStorage.getItem("banga_user")) {
-        let u = prompt("Banga Subs'a hoş geldin! İsmin nedir?");
-        localStorage.setItem("banga_user", u || "Misafir");
+    function handleLogin() {
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+        const storedPass = localStorage.getItem("banga_db_" + user);
+        if(storedPass && storedPass === pass) {
+            localStorage.setItem("banga_user", user);
+            updateAuthUI();
+            closeModals();
+        } else { document.getElementById('loginError').style.display = 'block'; }
     }
-    loadAnime('dandadan');
-    getComms();
-  };
 
-  async function saveComm() {
-    let v = document.getElementById("commInp").value;
-    if(!v.trim()) return;
-    await db.collection("comments").add({ u: localStorage.getItem("banga_user"), t: v, d: new Date() });
-    document.getElementById("commInp").value = "";
-  }
+    function updateAuthUI() {
+        const user = localStorage.getItem("banga_user");
+        if(user) {
+            document.getElementById('auth-zone').innerHTML = `<span>Hoş geldin, ${user}</span> | <span onclick="logout()" style="cursor:pointer">Çıkış</span>`;
+        }
+    }
 
-  function getComms() {
-    db.collection("comments").orderBy("d", "desc").onSnapshot(s => {
-        let h = "";
-        s.forEach(doc => { h += `<div class="c-item"><span class="c-user">${doc.data().u}:</span> ${doc.data().t}</div>`; });
-        document.getElementById("commList").innerHTML = h || "Henüz yorum yok.";
-    });
-  }
+    function logout() { localStorage.removeItem("banga_user"); location.reload(); }
+
+    function openAnime(id) {
+        const anime = animeData[id];
+        document.getElementById('home-page').style.display = "none";
+        document.getElementById('video-page').style.display = "grid";
+        document.getElementById('sideTitle').innerText = anime.name + " Bölümleri";
+        const list = document.getElementById('epList');
+        list.innerHTML = "";
+        anime.eps.forEach(e => {
+            let d = document.createElement('div');
+            d.className = "ep-link";
+            d.innerText = e.t;
+            d.onclick = () => { 
+                document.getElementById('vidFrame').src = e.l; 
+                document.getElementById('vidTitle').innerText = anime.name + " - " + e.t;
+            };
+            list.appendChild(d);
+        });
+        document.getElementById('vidFrame').src = anime.eps[0].l;
+        document.getElementById('vidTitle').innerText = anime.name + " - " + anime.eps[0].t;
+        getComms();
+    }
+
+    function showHome() { 
+        document.getElementById('home-page').style.display = "grid"; 
+        document.getElementById('video-page').style.display = "none"; 
+        document.getElementById('vidFrame').src = ""; // Videoyu durdur
+    }
+
+    function filterAnimes() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('anime-card');
+        for (let i = 0; i < cards.length; i++) {
+            let name = cards[i].querySelector('h3').innerText.toLowerCase();
+            cards[i].style.display = name.includes(input) ? "block" : "none";
+        }
+    }
+
+    async function saveComm() {
+        let v = document.getElementById("commInp").value;
+        let user = localStorage.getItem("banga_user");
+        if(!user) return alert("Yorum yapmak için giriş yapmalısın!");
+        if(!v.trim()) return;
+        await db.collection("comments").add({ u: user, t: v, d: new Date() });
+        document.getElementById("commInp").value = "";
+    }
+
+    function getComms() {
+        db.collection("comments").orderBy("d", "desc").onSnapshot(s => {
+            let h = "";
+            s.forEach(doc => { h += `<div class="c-item"><span class="c-user">${doc.data().u}:</span> ${doc.data().t}</div>`; });
+            document.getElementById("commList").innerHTML = h || "Henüz yorum yok.";
+        });
+    }
+
+    window.onload = updateAuthUI;
 </script>
 </body>
 </html>
