@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banga Anime - Kesin Günlük Anket Fix</title>
+    <title>Banga Subs - Season Update</title>
     <style>
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; margin: 0; padding-bottom: 50px; }
         .top-bar { background: #1a1a1a; color: #ccc; height: 35px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; font-size: 0.75rem; }
@@ -22,7 +22,10 @@
         #video-page { display: none; max-width: 1200px; margin: 20px auto; padding: 0 20px; grid-template-columns: 1fr 320px; gap: 20px; }
         .vid-wrapper { background: #000; aspect-ratio: 16/9; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
-        .sidebar { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 4px; overflow-y: auto; max-height: 500px; }
+        .sidebar { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 4px; overflow-y: auto; max-height: 550px; }
+        .season-tabs { display: flex; gap: 5px; margin-bottom: 10px; }
+        .season-btn { flex: 1; padding: 8px; background: #eee; border: 1px solid #ddd; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        .season-btn.active { background: #e91e63; color: white; border-color: #e91e63; }
         .ep-link { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; font-size: 0.9rem; }
         .comment-section { margin-top: 20px; background: white; padding: 20px; border-radius: 4px; border: 1px solid #ddd; }
         .comment-box { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
@@ -32,7 +35,10 @@
         .modal-content { background: white; width: 340px; margin: 10% auto; padding: 30px; border-radius: 8px; text-align: center; }
         .modal-content input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; box-sizing: border-box;}
         .btn-main { background: #e91e63; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; width: 100%; border-radius: 4px; margin-top: 5px;}
-        .points-badge { background: #ffd700; color: #000; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 5px; }
+        .badge { padding: 2px 8px; border-radius: 10px; font-weight: bold; font-size: 0.7rem; margin-left: 5px; text-transform: uppercase; }
+        .badge-admin { background: #000; color: #ff0000; border: 1px solid #ff0000; }
+        .badge-vip { background: #ffd700; color: #000; }
+        .points-badge { background: #eee; color: #333; padding: 2px 6px; border-radius: 5px; margin-left: 5px; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -79,45 +85,53 @@
             <div id="commentList" class="comment-list"></div>
         </div>
     </div>
-    <div class="sidebar"><h3>Bölümler</h3><div id="epList"></div></div>
+    <div class="sidebar">
+        <h3>Bölümler</h3>
+        <div id="seasonTabs" class="season-tabs" style="display:none;">
+            <button class="season-btn active" onclick="changeSeason(1)">1. Sezon</button>
+            <button class="season-btn" onclick="changeSeason(2)">2. Sezon</button>
+        </div>
+        <div id="epList"></div>
+    </div>
 </div>
 
 <div id="quiz-page" class="content-section">
-    <h2>Günlük 10 Soruluk Anket</h2>
+    <h2>Günlük Anket</h2>
     <div id="quiz-container" class="panel-box">
         <div id="quiz-start">
-            <p>10 soruyu doğru bil, 5 puan kazan! (Günde sadece 1 kez)</p>
+            <p>10 soruyu bil, 5 puan kazan!</p>
             <button class="btn-main" onclick="startQuiz()">Başla</button>
         </div>
         <div id="quiz-questions" style="display:none;">
             <p id="question-text" style="font-weight:bold;"></p>
             <div id="options-container"></div>
         </div>
-        <div id="quiz-limit" style="display:none;"><p style="color:red; font-weight:bold; font-size:1.2rem;">⚠️ Bugünlük hakkın doldu. Yarın tekrar gel!</p></div>
+        <div id="quiz-limit" style="display:none;"><p style="color:red; font-weight:bold;">Bugünlük hakkın doldu. Yarın gel!</p></div>
     </div>
 </div>
 
 <div id="vip-page" class="content-section">
-    <h2>VIP Yönetim</h2>
-    <div id="vip-locked" class="panel-box">⚠️ 50 Puan Gerekli.</div>
+    <h2>VIP Alanı</h2>
+    <div id="vip-locked" class="panel-box">⚠️ Bu alan sadece 50+ Puanı olanlara veya VIP üyelere özeldir.</div>
     <div id="vip-unlocked" class="panel-box" style="display:none;">
-        <h3 style="color:gold">🌟 VIP ALAN AKTİF</h3>
+        <h3 style="color:gold">🌟 VIP İÇERİKLER AKTİF</h3>
+        <p>VIP üyelerimiz için özel anime önerileri yakında burada!</p>
         <div id="admin-only" style="display:none; border-top: 2px solid red; margin-top:20px; padding-top:20px;">
-            <p style="color:red; font-weight:bold;">YÖNETİCİ PANELİ</p>
-            <button class="btn-main" style="background:black" onclick="localStorage.clear(); location.reload();">TÜM VERİLERİ SİL</button>
+            <p style="color:red; font-weight:bold;">🛡️ ADMİN KONTROLÜ</p>
+            <button class="btn-main" style="background:black" onclick="localStorage.clear(); location.reload();">SİSTEMİ SIFIRLA</button>
         </div>
     </div>
 </div>
 
 <div id="login-modal" class="modal"><div class="modal-content">
-    <h2>Giriş</h2>
+    <h2>Giriş Yap</h2>
     <input type="text" id="lUser" placeholder="Kullanıcı Adı">
     <input type="password" id="lPass" placeholder="Şifre">
     <button class="btn-main" onclick="login()">Giriş</button>
 </div></div>
 
 <div id="register-modal" class="modal"><div class="modal-content">
-    <h2>Kayıt</h2>
+    <h2>Kayıt Ol</h2>
     <input type="text" id="rUser" placeholder="Kullanıcı Adı">
     <input type="password" id="rPass" placeholder="Şifre">
     <button class="btn-main" onclick="register()">Kayıt Ol</button>
@@ -125,31 +139,74 @@
 
 <script>
     const animeData = {
-        jjk: { eps: [
-            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview"},
-            {t:"2. Bölüm", l:"https://drive.google.com/file/d/1GRFrUaZG2xk5cdfFvsj_k3lO8JyCv8r9/preview"},
-            {t:"3. Bölüm", l:"https://drive.google.com/file/d/1UmOBU9THCqx6oWHXJb9ePv4aU1d4vsB5/preview"},
-            {t:"4. Bölüm", l:"https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/preview"},
-            {t:"5. Bölüm", l:"https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/preview"},
-            {t:"6. Bölüm", l:"https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/preview"},
-            {t:"7. Bölüm", l:"https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/preview"},
-            {t:"8. Bölüm", l:"https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/preview"}
-        ]},
-        csm: { eps: [{t:"1. Bölüm (Türkçe Dublaj)", l:"https://drive.google.com/file/d/1JYaLxkJaqNsjEbhe4wjw_g7lR9QopXlR/preview"}] },
-        dandadan: { eps: [
-            {t:"1. Bölüm", l:"https://drive.google.com/file/d/1Sb5XIDjMgAef1ABBKg4zK5-lfHM8Qqrx/preview"},
-            {t:"2. Bölüm", l:"https://drive.google.com/file/d/1g8eDSwZgRLaIMTq0jpjxrxZE8V6jo2vo/preview"},
-            {t:"3. Bölüm", l:"https://drive.google.com/file/d/1bxAEUck0sCRQSzIQkQJaSQMiU_w14XrD/preview"},
-            {t:"4. Bölüm", l:"https://drive.google.com/file/d/1DPMwleo2ete-Sl_NwLkFUWzLu34pv1ww/preview"},
-            {t:"5. Bölüm", l:"https://drive.google.com/file/d/1BOH7ZR1g8fmmSR_wDDQ5L3lKsNug7epf/preview"},
-            {t:"6. Bölüm", l:"https://drive.google.com/file/d/1A2Fan-CKUcALy81ueaVZGsJnWovj46XS/preview"},
-            {t:"7. Bölüm", l:"https://drive.google.com/file/d/1Jj_uqpbP-IdWIfDAP1DKYWzrWOZoWn_w/preview"},
-            {t:"8. Bölüm", l:"https://drive.google.com/file/d/1kKogKMxbdOEkqibrfB9aSCRDT6noTO_5/preview"},
-            {t:"9. Bölüm (Sezon Finali)", l:"https://drive.google.com/file/d/1PVqJyvJhOryc0Ze6UN5b2g-LiNDIotez/preview"}
-        ]}
+        jjk: {
+            seasons: {
+                1: [
+                    {t:"1. Bölüm", l:"https://drive.google.com/file/d/1DawUU843Qeo02PUoKRZ2HamQc-HVbuI5/preview"},
+                    {t:"2. Bölüm", l:"https://drive.google.com/file/d/1GRFrUaZG2xk5cdfFvsj_k3lO8JyCv8r9/preview"},
+                    {t:"3. Bölüm", l:"https://drive.google.com/file/d/1UmOBU9THCqx6oWHXJb9ePv4aU1d4vsB5/preview"},
+                    {t:"4. Bölüm", l:"https://drive.google.com/file/d/1W-3vZ8yzQuzsXbHf5OKxewIDFG9HQ9ef/preview"},
+                    {t:"5. Bölüm", l:"https://drive.google.com/file/d/1bOm9fdxVqUzqPa6HRbh3BEb01_fE6Fz0/preview"},
+                    {t:"6. Bölüm", l:"https://drive.google.com/file/d/1EkBzkxWQ1JJv0gUT1OoRAA5cK-nmWwFw/preview"},
+                    {t:"7. Bölüm", l:"https://drive.google.com/file/d/1r5kA6QAqj61R9ImZEKjAciEcHyaDi49-/preview"},
+                    {t:"8. Bölüm", l:"https://drive.google.com/file/d/1dmA-L-ccfIly3Nbow5rnlsh6onfVFfut/preview"},
+                    {t:"9. Bölüm", l:"https://drive.google.com/file/d/1Z9MLVxL89pAmrzmn1yVMSZ3heUOgWMYK/preview"},
+                    {t:"10. Bölüm", l:"https://drive.google.com/file/d/1Ek4i9QyFp4kq2BuFH09GuwjKztKZz9sD/preview"},
+                    {t:"11. Bölüm", l:"https://drive.google.com/file/d/1GfckVCSYAg-SZnrQcSavmlpb7exerNWK/preview"},
+                    {t:"12. Bölüm", l:"https://drive.google.com/file/d/1QI4J6ConGXpjgy_EubLmF2Bj0XiYPCsc/preview"},
+                    {t:"13. Bölüm", l:"https://drive.google.com/file/d/1PXd4CdTodrmo0DsKl81Oqt-9XSg0vWYw/preview"},
+                    {t:"14. Bölüm", l:"https://drive.google.com/file/d/1dMlYaa6xeTctVNqIaiUYGv0P_IsSyiYL/preview"},
+                    {t:"15. Bölüm", l:"https://drive.google.com/file/d/1VxUcx1sk3yp4YePiife9mN6I9R77dldL/preview"},
+                    {t:"16. Bölüm", l:"https://drive.google.com/file/d/1g-2F_oZuHyUF7gq483ZVVwXoQMQPqWSQ/preview"},
+                    {t:"17. Bölüm", l:"https://drive.google.com/file/d/106s8AJ6OcHiMSF2zeY82_0oSTUc44Xmj/preview"},
+                    {t:"18. Bölüm", l:"https://drive.google.com/file/d/1SPbRIU1desz0uFYDKzka6NFKadYd0sj6/preview"},
+                    {t:"19. Bölüm", l:"https://drive.google.com/file/d/1xdH1wrvUNGa7B7sDUNjaP8TCVQ3KNXzk/preview"},
+                    {t:"20. Bölüm", l:"https://drive.google.com/file/d/1YbykYKCLWFo8Sc8py24Jrnl9isWIBV6I/preview"},
+                    {t:"21. Bölüm", l:"https://drive.google.com/file/d/1QBLzmdj8Rz_mtHSS9qWdTlmUHitAnWKa/preview"},
+                    {t:"22. Bölüm", l:"https://drive.google.com/file/d/1HESz_vxpTRYU8UwYS9SSvMvoYp4PHEBz/preview"},
+                    {t:"23. Bölüm", l:"https://drive.google.com/file/d/1MaffwrsVMo75EifihenDebZc-YuOzrGd/preview"},
+                    {t:"24. Bölüm (Sezon Finali)", l:"https://drive.google.com/file/d/1Jtx0t18L8SL9qqNpN1iFzz403tLlyfHW/preview"}
+                ]
+            }
+        },
+        csm: {
+            seasons: {
+                1: [{t:"1. Bölüm (Türkçe Dublaj)", l:"https://drive.google.com/file/d/1JYaLxkJaqNsjEbhe4wjw_g7lR9QopXlR/preview"}]
+            }
+        },
+        dandadan: {
+            seasons: {
+                1: [
+                    {t:"1. Bölüm", l:"https://drive.google.com/file/d/1Sb5XIDjMgAef1ABBKg4zK5-lfHM8Qqrx/preview"},
+                    {t:"2. Bölüm", l:"https://drive.google.com/file/d/1g8eDSwZgRLaIMTq0jpjxrxZE8V6jo2vo/preview"},
+                    {t:"3. Bölüm", l:"https://drive.google.com/file/d/1bxAEUck0sCRQSzIQkQJaSQMiU_w14XrD/preview"},
+                    {t:"4. Bölüm", l:"https://drive.google.com/file/d/1DPMwleo2ete-Sl_NwLkFUWzLu34pv1ww/preview"},
+                    {t:"5. Bölüm", l:"https://drive.google.com/file/d/1BOH7ZR1g8fmmSR_wDDQ5L3lKsNug7epf/preview"},
+                    {t:"6. Bölüm", l:"https://drive.google.com/file/d/1A2Fan-CKUcALy81ueaVZGsJnWovj46XS/preview"},
+                    {t:"7. Bölüm", l:"https://drive.google.com/file/d/1Jj_uqpbP-IdWIfDAP1DKYWzrWOZoWn_w/preview"},
+                    {t:"8. Bölüm", l:"https://drive.google.com/file/d/1kKogKMxbdOEkqibrfB9aSCRDT6noTO_5/preview"},
+                    {t:"9. Bölüm (Sezon Finali)", l:"https://drive.google.com/file/d/1PVqJyvJhOryc0Ze6UN5b2g-LiNDIotez/preview"}
+                ],
+                2: [
+                    {t:"1. Bölüm", l:"https://drive.google.com/file/d/1lRn0Af7lqi1vYJylNjpWfIoUinL9WLSf/preview"},
+                    {t:"2. Bölüm", l:"https://drive.google.com/file/d/1SXDuzfrWgDTGyRtIKLSFOqFRVayZIlhR/preview"},
+                    {t:"3. Bölüm", l:"https://drive.google.com/file/d/1Tuh7Zc-mEMmh7hbt-QIgm7D-B840kCp6/preview"},
+                    {t:"4. Bölüm", l:"https://drive.google.com/file/d/1ZzhZlpFP9gmLzxzUOXUHDNwTPARy6dVF/preview"},
+                    {t:"5. Bölüm", l:"https://drive.google.com/file/d/1X_42ees143fnqwmTlclR6h9TCa7QGeVz/preview"},
+                    {t:"6. Bölüm", l:"https://drive.google.com/file/d/1484kYiRaulC5KkDipQluKWt1Xxtq7iQc/preview"},
+                    {t:"7. Bölüm", l:"https://drive.google.com/file/d/1qhBJId63p4LkyclOKcVj7OloOotlWYB1/preview"},
+                    {t:"8. Bölüm", l:"https://drive.google.com/file/d/1e47mUbg4mGBntXK9WeNC-hU-mufiiPfi/preview"},
+                    {t:"9. Bölüm", l:"https://drive.google.com/file/d/1vWHMARCvyuOqbthKouV01Vzxtqrny0Zv/preview"},
+                    {t:"10. Bölüm", l:"https://drive.google.com/file/d/1sRnM-WqG8AYhviRYGxvYbQs0in6Tjmb4/preview"},
+                    {t:"11. Bölüm", l:"https://drive.google.com/file/d/1bST0GAV9HtCB3FXkk4o9tj46cKD0s8zw/preview"},
+                    {t:"12. Bölüm (Sezon Finali)", l:"https://drive.google.com/file/d/1OmWACZ0Czca6cvqz7Qy46qDzbPZzJlqT/preview"}
+                ]
+            }
+        }
     };
 
     const questions = [
+        {q: "Banga Subs sahibi kim?", a: ["Necati Ömer", "Admin", "Bot"], c: 0},
         {q: "Sukuna'nın kaç gözü vardır?", a: ["2", "4", "6"], c: 1},
         {q: "Pochita neye dönüşür?", a: ["Testere", "Balta", "Kılıç"], c: 0},
         {q: "Gojo'nun bandajı ne renk?", a: ["Siyah", "Beyaz", "Kırmızı"], c: 0},
@@ -158,18 +215,18 @@
         {q: "Power ne sever?", a: ["Kan", "Ekmek", "Elma"], c: 0},
         {q: "Denji'nin kalbi?", a: ["Pochita", "Makima", "Aki"], c: 0},
         {q: "Itadori'nin arkadaşı?", a: ["Fushiguro", "Todo", "İkisi de"], c: 2},
-        {q: "Okarun neyini kaybetti?", a: ["Cüzdan", "Özel bölge", "Saat"], c: 1},
-        {q: "Banga Subs sahibi kim?", a: ["Necati Ömer", "Admin", "Bot"], c: 0}
+        {q: "Okarun neyini kaybetti?", a: ["Cüzdan", "Özel bölge", "Saat"], c: 1}
     ];
 
-    let qIdx = 0; let errors = 0; let currentAnimeId = "";
+    let qIdx = 0; let errors = 0; let currentAnimeId = ""; let currentSeason = 1;
 
     function updateUI() {
         const u = localStorage.getItem("banga_user");
         if(u) {
             const isAdmin = (u === "banga subs");
             let p = isAdmin ? "∞" : (localStorage.getItem("pts_" + u) || 0);
-            document.getElementById('auth-zone').innerHTML = `${isAdmin ? '🛡️ ' : ''}<b>${u}</b> <span class="points-badge">${p} PT</span> | <span onclick="logout()" style="cursor:pointer">Çıkış</span>`;
+            let badge = isAdmin ? '<span class="badge badge-admin">Admin</span>' : (parseInt(p) >= 50 ? '<span class="badge badge-vip">VIP</span>' : '');
+            document.getElementById('auth-zone').innerHTML = `<b>${u}</b> ${badge} <span class="points-badge">${p} PT</span> | <span onclick="logout()" style="cursor:pointer">Çıkış</span>`;
             if(isAdmin || parseInt(p) >= 50) {
                 document.getElementById('vip-locked').style.display = 'none';
                 document.getElementById('vip-unlocked').style.display = 'block';
@@ -178,45 +235,70 @@
         }
     }
 
+    function showSection(id, el) {
+        const u = localStorage.getItem("banga_user");
+        if((id === 'quiz-page' || id === 'vip-page') && !u) {
+            alert("Bu sayfaya girmek için önce giriş yapmalısınız!");
+            openModal('login');
+            return;
+        }
+        document.querySelectorAll('.container, .content-section, #video-page').forEach(s=>s.style.display='none');
+        document.getElementById(id).style.display = (id==='home-page'||id==='video-page') ? 'grid' : 'block';
+        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); 
+        if(el) el.classList.add('active');
+        if(id === 'quiz-page') checkQuizLimit();
+    }
+
+    function openAnime(id) {
+        currentAnimeId = id;
+        currentSeason = 1;
+        showSection('video-page');
+        
+        const tabs = document.getElementById('seasonTabs');
+        const seasons = Object.keys(animeData[id].seasons);
+        if(seasons.length > 1) {
+            tabs.style.display = 'flex';
+            let h = "";
+            seasons.forEach(s => h += `<button class="season-btn ${s==1?'active':''}" onclick="changeSeason(${s})">${s}. Sezon</button>`);
+            tabs.innerHTML = h;
+        } else {
+            tabs.style.display = 'none';
+        }
+        
+        loadEpisodes(1);
+        loadComments();
+    }
+
+    function changeSeason(s) {
+        currentSeason = s;
+        document.querySelectorAll('.season-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.includes(s + "."));
+        });
+        loadEpisodes(s);
+    }
+
+    function loadEpisodes(s) {
+        const list = document.getElementById('epList'); list.innerHTML = "";
+        animeData[currentAnimeId].seasons[s].forEach(e => {
+            let d = document.createElement('div'); d.className="ep-link"; d.innerText=e.t;
+            d.onclick=()=>{ document.getElementById('vidFrame').src=e.l; document.getElementById('vidTitle').innerText=e.t; loadComments(); };
+            list.appendChild(d);
+        });
+    }
+
     function checkQuizLimit() {
         const u = localStorage.getItem("banga_user");
-        if(!u) return;
-        if(u === "banga subs") return; // Admin için sınır yok
-
-        const today = new Date().toDateString();
-        const lastDate = localStorage.getItem("q_date_" + u);
-
-        if(lastDate === today) {
+        if(!u || u === "banga subs") return;
+        if(localStorage.getItem("q_date_" + u) === new Date().toDateString()) {
             document.getElementById('quiz-start').style.display = 'none';
             document.getElementById('quiz-limit').style.display = 'block';
-            document.getElementById('quiz-questions').style.display = 'none';
         } else {
             document.getElementById('quiz-start').style.display = 'block';
             document.getElementById('quiz-limit').style.display = 'none';
         }
     }
 
-    function showSection(id, el) {
-        document.querySelectorAll('.container, .content-section, #video-page').forEach(s=>s.style.display='none');
-        document.getElementById(id).style.display = (id==='home-page'||id==='video-page') ? 'grid' : 'block';
-        document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active')); el.classList.add('active');
-        if(id === 'quiz-page') checkQuizLimit();
-    }
-
-    function openAnime(id) {
-        currentAnimeId = id;
-        showSection('video-page', document.getElementById('nav-home'));
-        const list = document.getElementById('epList'); list.innerHTML = "";
-        animeData[id].eps.forEach(e => {
-            let d = document.createElement('div'); d.className="ep-link"; d.innerText=e.t;
-            d.onclick=()=>{ document.getElementById('vidFrame').src=e.l; document.getElementById('vidTitle').innerText=e.t; loadComments(); };
-            list.appendChild(d);
-        });
-        loadComments();
-    }
-
     function startQuiz() {
-        if(!localStorage.getItem("banga_user")) return alert("Giriş Yap!");
         qIdx = 0; errors = 0;
         document.getElementById('quiz-start').style.display = 'none';
         document.getElementById('quiz-questions').style.display = 'block';
@@ -236,22 +318,23 @@
         localStorage.setItem("q_date_" + u, new Date().toDateString());
         if(errors === 0 && u !== "banga subs") {
             let p = parseInt(localStorage.getItem("pts_" + u) || 0);
-            localStorage.setItem("pts_" + u, p + 5); alert("Tebrikler! Hatasız bitirdin, 5 Puan eklendi.");
-        } else {
-            alert("Anket bitti! Hataların olduğu için puan alamadın. Yarın tekrar dene!");
-        }
-        checkQuizLimit();
+            localStorage.setItem("pts_" + u, p + 5); alert("Tebrikler! 5 Puan eklendi.");
+        } else alert("Bitti! Hataların olduğu için puan alamadın.");
+        location.reload();
     }
 
     function login() {
-        const u = document.getElementById('lUser').value; const p = document.getElementById('lPass').value;
+        const u = document.getElementById('lUser').value.toLowerCase();
+        const p = document.getElementById('lPass').value;
         if(u === "banga subs" && p === "bangasub16") { localStorage.setItem("banga_user", u); location.reload(); }
         else if(localStorage.getItem("db_" + u) === p) { localStorage.setItem("banga_user", u); location.reload(); }
         else alert("Bilgiler hatalı!");
     }
     function register() {
-        const u = document.getElementById('rUser').value; const p = document.getElementById('rPass').value;
-        if(!u || !p || localStorage.getItem("db_" + u)) return alert("Geçersiz kullanıcı adı!");
+        const u = document.getElementById('rUser').value.toLowerCase().trim();
+        const p = document.getElementById('rPass').value;
+        if(!u || !p) return alert("Boş bırakmayın!");
+        if(u === "banga subs" || localStorage.getItem("db_" + u)) return alert("Bu isim zaten alınmış!");
         localStorage.setItem("db_" + u, p); localStorage.setItem("pts_" + u, 0);
         localStorage.setItem("banga_user", u); location.reload();
     }
@@ -260,23 +343,18 @@
     function loadComments() {
         const list = document.getElementById('commentList'); list.innerHTML = "";
         let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
-        cms.reverse().forEach(c => {
-            list.innerHTML += `<div class="single-comment"><b>${c.u}:</b> ${c.t} <br><small style="color:#999">${c.d}</small></div>`;
-        });
+        cms.reverse().forEach(c => list.innerHTML += `<div class="single-comment"><b>${c.u}:</b> ${c.t}</div>`);
     }
     function postComment() {
         const u = localStorage.getItem("banga_user"); const val = document.getElementById('commentInput').value;
-        if(!u) return alert("Önce giriş yap!"); if(!val) return;
+        if(!u) return alert("Giriş yapın!");
         let cms = JSON.parse(localStorage.getItem("comments_" + currentAnimeId) || "[]");
-        cms.push({u: u, t: val, d: new Date().toLocaleString()});
-        localStorage.setItem("comments_" + currentAnimeId, JSON.stringify(cms));
+        cms.push({u: u, t: val}); localStorage.setItem("comments_" + currentAnimeId, JSON.stringify(cms));
         document.getElementById('commentInput').value = ""; loadComments();
     }
     function filterAnime() {
         let v = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.anime-card').forEach(c => {
-            c.style.display = c.innerText.toLowerCase().includes(v) ? "block" : "none";
-        });
+        document.querySelectorAll('.anime-card').forEach(c => c.style.display = c.innerText.toLowerCase().includes(v) ? "block" : "none");
     }
     window.onclick = (e) => { if(e.target.className==='modal') document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); }
     window.onload = updateUI;
